@@ -29,7 +29,7 @@ def intersect(a, b):
     return list(set(a) & set(b))
 
 
-def run_single(train, test, features, target, random_state=0):
+def run_single(train, test, features, target):
     eta = 0.2
     max_depth = 5
     subsample = 0.8
@@ -47,13 +47,12 @@ def run_single(train, test, features, target, random_state=0):
         "subsample": subsample,
         "colsample_bytree": colsample_bytree,
         "silent": 1,
-        "seed": random_state,
     }
     num_boost_round = 115
     early_stopping_rounds = 10
     test_size = 0.1
 
-    X_train, X_valid = train_test_split(train, test_size=test_size, random_state=random_state)
+    X_train, X_valid = train_test_split(train, test_size=test_size)
     print('Length train:', len(X_train.index))
     print('Length valid:', len(X_valid.index))
     y_train = X_train[target]
@@ -79,7 +78,7 @@ def run_single(train, test, features, target, random_state=0):
     return test_prediction.tolist(), score
 
 
-def run_kfold(nfolds, train, test, features, target, random_state=0):
+def run_kfold(nfolds, train, test, features, target):
     eta = 0.1
     max_depth = 5
     subsample = 0.8
@@ -96,14 +95,13 @@ def run_kfold(nfolds, train, test, features, target, random_state=0):
         "subsample": subsample,
         "colsample_bytree": colsample_bytree,
         "silent": 1,
-        "seed": random_state
     }
     num_boost_round = 50
     early_stopping_rounds = 10
 
     yfull_train = dict()
     yfull_test = copy.deepcopy(test[['activity_id']].astype(object))
-    kf = KFold(len(train.index), n_folds=nfolds, shuffle=True, random_state=random_state)
+    kf = KFold(len(train.index), n_folds=nfolds, shuffle=True)
     num_fold = 0
     for train_index, test_index in kf:
         num_fold += 1
