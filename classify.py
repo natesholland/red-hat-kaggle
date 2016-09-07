@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn.preprocessing import OneHotEncoder
+import random
 
 def reduce_dimen(dataset,column,toreplace):
     for index,i in dataset[column].duplicated(keep=False).iteritems():
@@ -118,4 +119,4 @@ bst = xgb.train(param, dtrain, num_round, watchlist,early_stopping_rounds=early_
 ypred = bst.predict(dtest)
 output = pd.DataFrame({ 'activity_id' : test['activity_id'], 'outcome': ypred })
 output.head()
-output.to_csv('without_leak.csv', index = False)
+output.to_csv('without_leak' + str(random.randint(1, 10000)) + '.csv', index = False)
