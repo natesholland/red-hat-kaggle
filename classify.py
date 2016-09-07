@@ -29,9 +29,9 @@ def act_data_treatment(dsname):
 
     return dataset
 
-act_train_data = pd.read_csv("../input/act_train.csv",dtype={'people_id': np.str, 'activity_id': np.str, 'outcome': np.int8}, parse_dates=['date'])
-act_test_data  = pd.read_csv("../input/act_test.csv", dtype={'people_id': np.str, 'activity_id': np.str}, parse_dates=['date'])
-people_data    = pd.read_csv("../input/people.csv", dtype={'people_id': np.str, 'activity_id': np.str, 'char_38': np.int32}, parse_dates=['date'])
+act_train_data = pd.read_csv("input/act_train.csv",dtype={'people_id': np.str, 'activity_id': np.str, 'outcome': np.int8}, parse_dates=['date'])
+act_test_data  = pd.read_csv("input/act_test.csv", dtype={'people_id': np.str, 'activity_id': np.str}, parse_dates=['date'])
+people_data    = pd.read_csv("input/people.csv", dtype={'people_id': np.str, 'activity_id': np.str, 'char_38': np.int32}, parse_dates=['date'])
 
 act_train_data=act_train_data.drop('char_10',axis=1)
 act_test_data=act_test_data.drop('char_10',axis=1)
@@ -104,7 +104,7 @@ dtrain = xgb.DMatrix(X_sparse,label=y)
 dtest = xgb.DMatrix(X_test_sparse)
 
 param = {'max_depth':10, 'eta':0.02, 'silent':1, 'objective':'binary:logistic' }
-param['nthread'] = 4
+param['nthread'] = 2
 param['eval_metric'] = 'auc'
 param['subsample'] = 0.7
 param['colsample_bytree']= 0.7
@@ -112,7 +112,7 @@ param['min_child_weight'] = 0
 param['booster'] = "gblinear"
 
 watchlist  = [(dtrain,'train')]
-num_round = 300
+num_round = 1000
 early_stopping_rounds=10
 bst = xgb.train(param, dtrain, num_round, watchlist,early_stopping_rounds=early_stopping_rounds)
 
